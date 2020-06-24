@@ -45,6 +45,7 @@ from transformers import (
     BertConfig,
     BertModel,
     BertTokenizer,
+    RobertaConfig, RobetaModel, RobertaTokenizer
     get_linear_schedule_with_warmup,
     BERT_PRETRAINED_MODEL_ARCHIVE_LIST,
 )
@@ -94,6 +95,7 @@ class MultiModalClassificationModel:
 
         MODEL_CLASSES = {
             "bert": (BertConfig, BertModel, BertTokenizer),
+            "roberta": (RobertaConfig, RobetaModel, RobertaTokenizer): 
         }
 
         self.args = self._load_model_args(model_name)
