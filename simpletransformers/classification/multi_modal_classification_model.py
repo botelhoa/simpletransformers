@@ -45,7 +45,7 @@ from transformers import (
     BertConfig,
     BertModel,
     BertTokenizer,
-    RobertaConfig, RobetaModel, RobertaTokenizer
+    RobertaConfig, RobetaModel, RobertaTokenizer,
     get_linear_schedule_with_warmup,
     BERT_PRETRAINED_MODEL_ARCHIVE_LIST,
 )
