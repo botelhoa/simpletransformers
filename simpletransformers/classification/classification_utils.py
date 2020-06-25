@@ -425,13 +425,53 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
 POOLING_BREAKDOWN = {1: (1, 1), 2: (2, 1), 3: (3, 1), 4: (2, 2), 5: (5, 1), 6: (3, 2), 7: (7, 1), 8: (4, 2), 9: (3, 3)}
 
 
-class ImageEncoder(nn.Module):
+# class ImageEncoder(nn.Module):
+#     def __init__(self, args):
+#         super().__init__()
+#         model = torchvision.models.resnet152(pretrained=True)
+#         modules = list(model.children())[:-2]
+#         self.model = nn.Sequential(*modules)
+#         self.pool = nn.AdaptiveAvgPool2d(POOLING_BREAKDOWN[args.num_image_embeds])
+
+#     def forward(self, x):
+#         # Bx3x224x224 -> Bx2048x7x7 -> Bx2048xN -> BxNx2048
+#         out = self.pool(self.model(x))
+#         out = torch.flatten(out, start_dim=2)
+#         out = out.transpose(1, 2).contiguous()
+#         return out  # BxNx2048
+
+
+# class ImageEncoder(nn.Module):
+#     def __init__(self, args):
+#         super().__init__()
+#         model = torchvision.models.inception_v3(pretrained=True)
+#         modules = list(model.children())[:-2]
+#         self.model = nn.Sequential(*modules)
+#         self.pool = nn.AdaptiveAvgPool2d(POOLING_BREAKDOWN[args.num_image_embeds])
+
+#     def forward(self, x):
+#         # Bx3x224x224 -> Bx2048x7x7 -> Bx2048xN -> BxNx2048
+#         out = self.pool(self.model(x))
+#         out = torch.flatten(out, start_dim=2)
+#         out = out.transpose(1, 2).contiguous()
+#         return out  # BxNx2048
+    
+    
+from keras.models import Model
+from keras.layers import Dense, GlobalAveragePooling2D, Dropout
+from keras.applications import Xception
+
+class ImageEncoder():
     def __init__(self, args):
-        super().__init__()
-        model = torchvision.models.resnet152(pretrained=True)
-        modules = list(model.children())[:-2]
-        self.model = nn.Sequential(*modules)
-        self.pool = nn.AdaptiveAvgPool2d(POOLING_BREAKDOWN[args.num_image_embeds])
+        base_model = Xception(weights='imagenet', include_top=False, input_shape=(X_IMAGE_SIZE, X_IMAGE_SIZE, 3))
+        x = base_model.output
+        x = GlobalAveragePooling2D()(x)
+        # fully-connected layer
+        x = Dense(1024, activation='relu')(x)
+        x = Dropout(dropout)(x)
+        predictions = Dense(4, activation='softmax')(x)
+
+        model = Model(inputs=base_model.input, outputs=predictions)
 
     def forward(self, x):
         # Bx3x224x224 -> Bx2048x7x7 -> Bx2048xN -> BxNx2048
