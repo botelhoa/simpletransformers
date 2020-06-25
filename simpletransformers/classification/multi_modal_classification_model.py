@@ -159,18 +159,18 @@ class MultiModalClassificationModel:
         self.img_encoder = ImageEncoder(self.args)
         self.model = MMBTForClassification(self.config, self.transformer, self.img_encoder)
 
-        if model_name not in BERT_PRETRAINED_MODEL_ARCHIVE_LIST:
-            try:
-                self.model.load_state_dict(torch.load(os.path.join("/content/drive/My Drive/Dog_Whistle_Code/Fine_Tuned_Models/Text/RoBERTa", "pytorch_model.bin")))
-            except EnvironmentError:
-                msg = (
-                    "Model name '{}' was not found in model name list ({}). "
-                    "We assumed '{}' was a path or url to model weight files named one of {} but "
-                    "couldn't find any such file at this path or url.".format(
-                        model_name, ", ".join(BERT_PRETRAINED_MODEL_ARCHIVE_LIST), model_name, "pytorch_model.bin",
-                    )
-                )
-                raise EnvironmentError(msg)
+#         if model_name not in BERT_PRETRAINED_MODEL_ARCHIVE_LIST:
+#             try:
+#                 self.model.load_state_dict(torch.load(os.path.join("/content/drive/My Drive/Dog_Whistle_Code/Fine_Tuned_Models/Text/RoBERTa", "pytorch_model.bin")))
+#             except EnvironmentError:
+#                 msg = (
+#                     "Model name '{}' was not found in model name list ({}). "
+#                     "We assumed '{}' was a path or url to model weight files named one of {} but "
+#                     "couldn't find any such file at this path or url.".format(
+#                         model_name, ", ".join(BERT_PRETRAINED_MODEL_ARCHIVE_LIST), model_name, "pytorch_model.bin",
+#                     )
+#                 )
+#                 raise EnvironmentError(msg)
 
         self.tokenizer = tokenizer_class.from_pretrained(model_name, do_lower_case=self.args.do_lower_case, **kwargs)
 
