@@ -469,16 +469,13 @@ class ImageEncoder():
         # fully-connected layer
         x = Dense(1024, activation='relu')(x)
         x = Dropout(dropout)(x)
-        predictions = Dense(4, activation='softmax')(x)
-
-        model = Model(inputs=base_model.input, outputs=predictions)
-
+        self.predictions = Dense(4, activation='softmax')(x)
+        self.model = Model(inputs=base_model.input, outputs=predictions)
+        
     def forward(self, x):
-        # Bx3x224x224 -> Bx2048x7x7 -> Bx2048xN -> BxNx2048
-        out = self.pool(self.model(x))
-        out = torch.flatten(out, start_dim=2)
-        out = out.transpose(1, 2).contiguous()
-        return out  # BxNx2048
+        out = self.model.predict(x.cpu().numpy())
+        out = torch.Tensor(out)
+        return out  
 
 
 class JsonlDataset(Dataset):
