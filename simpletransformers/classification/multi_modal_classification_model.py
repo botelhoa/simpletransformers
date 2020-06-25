@@ -161,7 +161,7 @@ class MultiModalClassificationModel:
 
         if model_name not in BERT_PRETRAINED_MODEL_ARCHIVE_LIST:
             try:
-                self.model.load_state_dict(torch.load(os.path.join(model_name, "pytorch_model.bin")))
+                self.model.load_state_dict(torch.load(os.path.join("/content/drive/My Drive/Dog_Whistle_Code/Fine_Tuned_Models/Text/RoBERTa", "pytorch_model.bin")))
             except EnvironmentError:
                 msg = (
                     "Model name '{}' was not found in model name list ({}). "
